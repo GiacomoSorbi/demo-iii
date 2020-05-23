@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import './App.css'
+import { formatTime } from './utilities'
 
-function App() {
+const App = () => {
+  const [time, setTime] = useState(0)
+  const [timer, setTimer] = useState(false)
+  const [timerInterval, setTimerInterval] = useState(50)
+  const triggerTimer = () => setTimer(!timer)
+  const onChangeTimeInterval = (e) => setTimerInterval(+e.target.value)
+
+  useEffect(() => {
+    setTimeout(() => timer && setTime(time + timerInterval), timerInterval)
+  }, [time, timer, timerInterval])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='app'>
+      <div className='timer'>{formatTime(time)}</div>
+      <div>The timer is {timer ? 'on' : 'off'}</div>
+      <div>
+        Current timer interval:
+        <input
+          onChange={onChangeTimeInterval}
+          type='number'
+          value={timerInterval}
+          min={4}
+        />
+      </div>
+      <button onClick={triggerTimer}>{timer ? 'OFF' : 'ON'}</button>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
